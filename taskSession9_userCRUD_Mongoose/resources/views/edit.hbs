@@ -1,0 +1,26 @@
+{{>header}}
+<h4 class="mb-3 text-primary">Add New User</h4>
+<form method="post">
+    <div class="mb-3">
+        <input name="name" placeholder="name" class="form-control" value="{{user.name}}">
+    </div>
+    <div class="mb-3">
+        <input name="age" placeholder="age" class="form-control" value="{{user.age}}">
+    </div>
+    <div class="mb-3">
+        <input name="email" placeholder="email" class="form-control" value="{{user.email}}">
+    </div>
+      <div class="mb-3">
+        <input name="password" placeholder="password" class="form-control" value="{{user.name}}">
+    </div>
+       <div class="mb-3">
+<select  class="form-control" name="gender" Selected="{{user.gender}}">
+                {{#each genderList}}
+                <option value="{{this}}">{{this}}</option>
+                {{/each}}
+</select>>    </div>
+    <div class="mb-3">
+        <button class="btn btn-primary">Add New User</button>
+    </div>
+</form>
+{{>footer}}

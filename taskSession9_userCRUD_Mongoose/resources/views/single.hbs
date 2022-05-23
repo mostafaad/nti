@@ -1,0 +1,17 @@
+{{>header}}
+<h3 class="text-primary text-center">User Data</h3>
+{{#unless user}}
+<div class="alert alert-danger">
+    NO USERS with this id
+</div>
+{{else}}
+<div>
+    <h4>Id: {{user._id}}</h4>
+    <h4>Name: {{user.name}}</h4>
+    <h4>Age: {{user.age}}</h4>
+    <h4>Email: {{user.email}}</h4>
+    <h4>Gender: {{user.gender}}</h4>
+    <h4>Password: {{user.password}}</h4>
+</div>
+{{/unless}}
+{{>footer}}

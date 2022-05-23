@@ -1,0 +1,35 @@
+{{>header}}
+{{>navbar}}
+<section class="container my-4">
+    <h3 class="text-center text-primary">All Customers</h3>
+    <table class="table table-stripped">
+        <thead>
+            <th>ID</th>
+            <th>name</th>
+            <th>Balance</th>
+            <th>Actions</th>
+        </thead>
+        <tbody>
+            {{#if hasUsers}}
+                {{#each customers}}
+                <tr>
+                    <td>{{this._id}}</td>
+                    <td>{{this.name}}</td>
+                    <td>{{this.balance}}</td>
+                    <td>
+                        <a href="/single/{{this._id}}" class="btn btn-primary mx-3">Show</a>
+                        <a href="/addTransaction/{{this._id}}" class="btn btn-danger mx-3">Add Transaction</a>
+                    </td>
+                </tr>
+                {{/each}}
+            {{else}}
+                <tr class="alert alert-danger">
+                    <td colspan="4">
+                        No Customers Yet
+                    </td>
+                </tr>
+            {{/if}}
+        </tbody>
+    </table>
+</section>
+{{>footer}}
