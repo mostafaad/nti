@@ -1,0 +1,10 @@
+const router = require("express").Router()
+const authAdmin = require("../../app/middleware/auth.admin.middleware")
+const upload = require("../../app/middleware/uploadFile.middleware")
+const author = require("../../app/controller/admincontroller/author.admincontroller")
+router.get("/admin/author/all", authAdmin, author.all)
+router.post("/admin/author/add", authAdmin, author.add)
+router.get("/admin/author/all/:id",authAdmin, author.single)
+router.patch("/admin/author/edit/:id",authAdmin, author.edit)
+router.patch("/admin/author/delete/:id",authAdmin, author.delete)
+module.exports=router

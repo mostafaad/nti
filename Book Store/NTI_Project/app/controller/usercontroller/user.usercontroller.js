@@ -1,0 +1,108 @@
+const userModel = require("../../database/models/user")
+const sendEmail = require("../../helper/sendEmail.helper")
+const path = require("path")
+const fs = require("fs")
+class User{
+    static register = async(req,res)=>{
+        try{
+            const user = new userModel(req.body)
+            user.usertype="user"
+            await user.save()
+            sendEmail(user.email)
+            res.status(200).send({
+                apiStatus:true,
+                data: user,
+                message:"user added successfully"
+            })
+        }
+        catch(e){
+            res.status(500).send({
+                apiStatus:false,
+                data: e.message,
+                message:"user adding problem"
+            })
+
+        }
+    }
+    static login = async(req,res)=>{
+        try{
+            let user = await userModel.loginUser(req.body.email,req.body.password)
+            let token = await user.generateToken()
+            res.status(200).send({
+                apiStatus:true, 
+                data:{user, token}, 
+                message:"user logged in"
+            })
+        }
+        catch(e){
+            res.status(500).send({apiStatus:false, data:e.message, message:"invalid login"})
+        }
+    } 
+    static logOut = async(req,res)=>{
+        try{
+            req.user.tokens = req.user.tokens.filter(singleToken =>{
+                return singleToken.token != req.token
+            } )
+            await req.user.save()
+            res.status(200).send({
+                apiStatus:true,
+                message:"logged out",
+                data:{}
+            })
+        }
+        catch(e){
+            res.status(500).send({apiStatus:false, data:e.message, message:"error on logout"})
+        }
+    }
+    static editPassword = async(req,res)=>{
+        try{
+            const isValid = await req.user.checkPass(req.body.currentPass)
+            if(!isValid) throw new Error("invalid Password")
+            req.user.password = req.body.newPass
+            await req.user.save()
+            res.status(200).send({
+                apiStatus:true,
+                data:"updated",
+                message:"password updated"
+            })
+        }
+        catch(e){
+            res.status(500).send({
+                apiStatus:false, 
+                data:e.message, 
+                message:"error on update password"})
+        }
+    }
+  
+    static myProfile = async(req,res)=>{
+        try{
+            const user = await userModel.findById(req.params.id)
+            if(!user)
+                return res.status(404).send({ apiStatus:false, data:{}, message:"user not found"})    
+            res.status(200).send({ apiStatus:true, data:user, message:"data fetched" })
+        }
+        catch(e){
+            res.status(500).send({ apiStatus:false, data:e.message, message:"error in fetching" })
+        }
+
+    }
+    static editProfile = async(req,res)=>{
+        try{
+            const invalidEdits = ["password", "tokens", "status", "__v", "updatedAt"]
+            for (const property in req.body) {
+                if(!invalidEdits.includes(property)) 
+                    req.user[property] = req.body[property]
+            }
+            req.user.save()
+            res.send({
+                  apiStatus:true,
+                  data:req.user,
+                  message:"data updated"
+              })
+        }
+        catch(e){
+            res.status(500).send({ apiStatus:false, data:e.message, message:"error in fetching" })
+        }
+    }
+}
+module.exports=User

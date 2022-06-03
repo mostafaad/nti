@@ -1,0 +1,10 @@
+const router = require("express").Router()
+const authAdmin = require("../../app/middleware/auth.admin.middleware")
+const upload = require("../../app/middleware/uploadFile.middleware")
+const category = require("../../app/controller/admincontroller/category.admincontroller")
+router.get("/admin/category/all", authAdmin, category.all)
+router.post("/admin/category/add", authAdmin, category.add)
+router.get("/admin/category/all/:id",authAdmin, category.single)
+router.patch("/admin/category/edit/:id",authAdmin, category.edit)
+router.patch("/admin/category/delete/:id",authAdmin, category.delete)
+module.exports=router
